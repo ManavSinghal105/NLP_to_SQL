@@ -3,3 +3,5 @@ demo1.db
 query_log.txt
 __pycache__/
 *.pyc
+venv/
+rag-sql-phase1/venv/

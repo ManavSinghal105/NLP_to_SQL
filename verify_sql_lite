@@ -1,0 +1,12 @@
+import sqlite3
+
+conn = sqlite3.connect("demo1.db")
+cursor = conn.cursor()
+
+cursor.execute("SELECT * FROM customers")
+print("Customers:", cursor.fetchall())
+
+cursor.execute("SELECT * FROM orders")
+print("Orders:", cursor.fetchall())
+
+conn.close()
