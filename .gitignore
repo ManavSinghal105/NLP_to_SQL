@@ -1,0 +1,5 @@
+.env
+demo1.db
+query_log.txt
+__pycache__/
+*.pyc
