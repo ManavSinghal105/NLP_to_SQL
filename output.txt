@@ -1,0 +1,1142 @@
+Batch NL→SQL Test Run
+Timestamp: 2025-10-01 03:20:42.268699
+================================================================================
+
+################################################################################
+CASE 1
+################################################################################
+
+Natural Language Query
+----------------------
+Show all customers.
+
+Generated SQL
+-------------
+SELECT id, name, city, signup_date FROM customers;
+
+Result
+------------
++------+---------+---------------+---------------+
+|   id | name    | city          | signup_date   |
+|------+---------+---------------+---------------|
+|    1 | Alice   | New York      | 2023-12-01    |
+|    2 | Bob     | San Francisco | 2024-01-10    |
+|    3 | Charlie | New York      | 2024-02-15    |
++------+---------+---------------+---------------+
+
+################################################################################
+CASE 2
+################################################################################
+
+Natural Language Query
+----------------------
+List all the products purchased.
+
+Generated SQL
+-------------
+SELECT DISTINCT product FROM orders;
+
+Result
+------------
++-----------+
+| product   |
+|-----------|
+| Laptop    |
+| Phone     |
+| Mouse     |
++-----------+
+
+################################################################################
+CASE 3
+################################################################################
+
+Natural Language Query
+----------------------
+What are all the cities where customers live?
+
+Generated SQL
+-------------
+SELECT DISTINCT city FROM customers;
+
+Result
+------------
++---------------+
+| city          |
+|---------------|
+| New York      |
+| San Francisco |
++---------------+
+
+################################################################################
+CASE 4
+################################################################################
+
+Natural Language Query
+----------------------
+Show all orders placed.
+
+Generated SQL
+-------------
+SELECT id, customer_id, product, amount, order_date FROM orders;
+
+Result
+------------
++------+---------------+-----------+----------+--------------+
+|   id |   customer_id | product   |   amount | order_date   |
+|------+---------------+-----------+----------+--------------|
+|    1 |             1 | Laptop    |     1200 | 2024-02-20   |
+|    2 |             2 | Phone     |      800 | 2024-02-22   |
+|    3 |             1 | Mouse     |       25 | 2024-02-25   |
++------+---------------+-----------+----------+--------------+
+
+################################################################################
+CASE 5
+################################################################################
+
+Natural Language Query
+----------------------
+Get all customer names in alphabetical order.
+
+Generated SQL
+-------------
+SELECT name FROM customers ORDER BY name;
+
+Result
+------------
++---------+
+| name    |
+|---------|
+| Alice   |
+| Bob     |
+| Charlie |
++---------+
+
+################################################################################
+CASE 6
+################################################################################
+
+Natural Language Query
+----------------------
+Show customers from New York.
+
+Generated SQL
+-------------
+SELECT id, name FROM customers WHERE LOWER(city) = 'new york';
+
+Result
+------------
++------+---------+
+|   id | name    |
+|------+---------|
+|    1 | Alice   |
+|    3 | Charlie |
++------+---------+
+
+################################################################################
+CASE 7
+################################################################################
+
+Natural Language Query
+----------------------
+List all orders where amount is greater than 100.
+
+Generated SQL
+-------------
+SELECT id, customer_id, product, amount, order_date FROM orders WHERE amount > 100;
+
+Result
+------------
++------+---------------+-----------+----------+--------------+
+|   id |   customer_id | product   |   amount | order_date   |
+|------+---------------+-----------+----------+--------------|
+|    1 |             1 | Laptop    |     1200 | 2024-02-20   |
+|    2 |             2 | Phone     |      800 | 2024-02-22   |
++------+---------------+-----------+----------+--------------+
+
+################################################################################
+CASE 8
+################################################################################
+
+Natural Language Query
+----------------------
+Show all customers who signed up in 2023.
+
+Generated SQL
+-------------
+SELECT id, name FROM customers WHERE STRFTIME('%Y', signup_date) = '2023';
+
+Result
+------------
++------+--------+
+|   id | name   |
+|------+--------|
+|    1 | Alice  |
++------+--------+
+
+################################################################################
+CASE 9
+################################################################################
+
+Natural Language Query
+----------------------
+Find all orders for product 'Laptop'.
+
+Generated SQL
+-------------
+SELECT * FROM orders WHERE LOWER(product) = LOWER('Laptop');
+
+Result
+------------
++------+---------------+-----------+----------+--------------+
+|   id |   customer_id | product   |   amount | order_date   |
+|------+---------------+-----------+----------+--------------|
+|    1 |             1 | Laptop    |     1200 | 2024-02-20   |
++------+---------------+-----------+----------+--------------+
+
+################################################################################
+CASE 10
+################################################################################
+
+Natural Language Query
+----------------------
+List customers whose name starts with 'A'.
+
+Generated SQL
+-------------
+SELECT id, name FROM customers WHERE LOWER(name) LIKE 'a%';
+
+Result
+------------
++------+--------+
+|   id | name   |
+|------+--------|
+|    1 | Alice  |
++------+--------+
+
+################################################################################
+CASE 11
+################################################################################
+
+Natural Language Query
+----------------------
+Show each customer with the products they purchased.
+
+Generated SQL
+-------------
+SELECT T1.name, T2.product FROM customers AS T1 JOIN orders AS T2 ON T1.id = T2.customer_id;
+
+Result
+------------
++--------+-----------+
+| name   | product   |
+|--------+-----------|
+| Alice  | Laptop    |
+| Bob    | Phone     |
+| Alice  | Mouse     |
++--------+-----------+
+
+################################################################################
+CASE 12
+################################################################################
+
+Natural Language Query
+----------------------
+List all customers and their total number of orders.
+
+Generated SQL
+-------------
+SELECT c.name, count(o.id) FROM customers AS c JOIN orders AS o ON c.id = o.customer_id GROUP BY c.name;
+
+Result
+------------
++--------+---------------+
+| name   |   count(o.id) |
+|--------+---------------|
+| Alice  |             2 |
+| Bob    |             1 |
++--------+---------------+
+
+################################################################################
+CASE 13
+################################################################################
+
+Natural Language Query
+----------------------
+Show customer names with total money spent.
+
+Generated SQL
+-------------
+SELECT T1.name FROM customers AS T1 JOIN orders AS T2 ON T1.id = T2.customer_id GROUP BY T1.id ORDER BY sum(T2.amount) DESC;
+
+Result
+------------
++--------+
+| name   |
+|--------|
+| Alice  |
+| Bob    |
++--------+
+
+################################################################################
+CASE 14
+################################################################################
+
+Natural Language Query
+----------------------
+Which customer purchased 'Phone'?
+
+Generated SQL
+-------------
+SELECT T1.name FROM customers AS T1 JOIN orders AS T2 ON T1.id = T2.customer_id WHERE LOWER(T2.product) = LOWER('Phone');
+
+Result
+------------
++--------+
+| name   |
+|--------|
+| Bob    |
++--------+
+
+################################################################################
+CASE 15
+################################################################################
+
+Natural Language Query
+----------------------
+Show orders along with customer city.
+
+Generated SQL
+-------------
+SELECT o.id, o.product, o.amount, c.city FROM orders AS o JOIN customers AS c ON o.customer_id = c.id;
+
+Result
+------------
++------+-----------+----------+---------------+
+|   id | product   |   amount | city          |
+|------+-----------+----------+---------------|
+|    1 | Laptop    |     1200 | New York      |
+|    2 | Phone     |      800 | San Francisco |
+|    3 | Mouse     |       25 | New York      |
++------+-----------+----------+---------------+
+
+################################################################################
+CASE 16
+################################################################################
+
+Natural Language Query
+----------------------
+What is the total number of customers?
+
+Generated SQL
+-------------
+SELECT count(*) FROM customers;
+
+Result
+------------
++------------+
+|   count(*) |
+|------------|
+|          3 |
++------------+
+
+################################################################################
+CASE 17
+################################################################################
+
+Natural Language Query
+----------------------
+How many orders were placed in January 2024?
+
+Generated SQL
+-------------
+SELECT count(*) FROM orders WHERE STRFTIME('%Y', order_date) = '2024' AND STRFTIME('%m', order_date) = '01';
+
+Result
+------------
++------------+
+|   count(*) |
+|------------|
+|          0 |
++------------+
+
+################################################################################
+CASE 18
+################################################################################
+
+Natural Language Query
+----------------------
+Find the average order amount.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 59.760266918s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 59
+}
+]
+
+################################################################################
+CASE 19
+################################################################################
+
+Natural Language Query
+----------------------
+Get the maximum amount spent in a single order.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 59.381018416s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 59
+}
+]
+
+################################################################################
+CASE 20
+################################################################################
+
+Natural Language Query
+----------------------
+Which product has been purchased the most?
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 59.172101932s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 59
+}
+]
+
+################################################################################
+CASE 21
+################################################################################
+
+Natural Language Query
+----------------------
+Show total spent by each customer.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 59.029053844s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 59
+}
+]
+
+################################################################################
+CASE 22
+################################################################################
+
+Natural Language Query
+----------------------
+List products and how many times each was purchased.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 58.816587548s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 58
+}
+]
+
+################################################################################
+CASE 23
+################################################################################
+
+Natural Language Query
+----------------------
+Show average order value by city.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 58.566034174s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 58
+}
+]
+
+################################################################################
+CASE 24
+################################################################################
+
+Natural Language Query
+----------------------
+Count how many customers signed up in each year.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 58.426307774s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 58
+}
+]
+
+################################################################################
+CASE 25
+################################################################################
+
+Natural Language Query
+----------------------
+Find the number of orders per product.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 58.276022515s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 58
+}
+]
+
+################################################################################
+CASE 26
+################################################################################
+
+Natural Language Query
+----------------------
+Show all orders placed after June 2024.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 58.139123069s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 58
+}
+]
+
+################################################################################
+CASE 27
+################################################################################
+
+Natural Language Query
+----------------------
+Which customers signed up most recently?
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 57.986658724s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 57
+}
+]
+
+################################################################################
+CASE 28
+################################################################################
+
+Natural Language Query
+----------------------
+List customers who signed up before 2022.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 57.830509705s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 57
+}
+]
+
+################################################################################
+CASE 29
+################################################################################
+
+Natural Language Query
+----------------------
+Find all orders on Christmas day 2023.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 57.616045113s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 57
+}
+]
+
+################################################################################
+CASE 30
+################################################################################
+
+Natural Language Query
+----------------------
+Which month had the most orders?
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 57.470100839s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 57
+}
+]
+
+################################################################################
+CASE 31
+################################################################################
+
+Natural Language Query
+----------------------
+Show customers from Los Angeles who purchased 'Tablet'.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 57.319798242s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 57
+}
+]
+
+################################################################################
+CASE 32
+################################################################################
+
+Natural Language Query
+----------------------
+List all customers who bought more than 2 different products.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 57.120929331s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 57
+}
+]
+
+################################################################################
+CASE 33
+################################################################################
+
+Natural Language Query
+----------------------
+Find customers who never placed an order.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 56.992373757s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 56
+}
+]
+
+################################################################################
+CASE 34
+################################################################################
+
+Natural Language Query
+----------------------
+Show customers who spent more than 500 total.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 56.867461229s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 56
+}
+]
+
+################################################################################
+CASE 35
+################################################################################
+
+Natural Language Query
+----------------------
+List all products purchased by customers in Chicago.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 56.602913798s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 56
+}
+]
+
+################################################################################
+CASE 36
+################################################################################
+
+Natural Language Query
+----------------------
+Rank customers by total money spent.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 56.408903426s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 56
+}
+]
+
+################################################################################
+CASE 37
+################################################################################
+
+Natural Language Query
+----------------------
+Find the top 3 most popular products.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 56.266705529s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 56
+}
+]
+
+################################################################################
+CASE 38
+################################################################################
+
+Natural Language Query
+----------------------
+Show the top 5 customers with the highest average order value.
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 56.109711886s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 56
+}
+]
+
+################################################################################
+CASE 39
+################################################################################
+
+Natural Language Query
+----------------------
+Which city has the highest sales revenue?
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 55.971912885s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 55
+}
+]
+
+################################################################################
+CASE 40
+################################################################################
+
+Natural Language Query
+----------------------
+What percentage of orders were for 'Laptop'?
+
+Generated SQL (error)
+---------------------
+❌ Error during SQL generation: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15
+Please retry in 55.831208285s. [violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15
+}
+, links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, retry_delay {
+  seconds: 55
+}
+]

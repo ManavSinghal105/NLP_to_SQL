@@ -1,0 +1,368 @@
+
+################################################################################
+CASE 1
+################################################################################
+Natural Language Query
+----------------------
+Show all customers
+
+Generated SQL
+-------------
+SELECT DISTINCT customer_id FROM orders;
+
+Result
+------------
++---------------+
+|   customer_id |
+|---------------|
+|             1 |
+|             2 |
++---------------+
+
+Explanation
+------------
+The SQL query retrieved all unique customer IDs from the "orders" table, showing that only two customers (with IDs 1 and 2) have placed orders.
+
+Cache Hit: False
+Golden Expectation: Alice
+
+
+
+################################################################################
+CASE 2
+################################################################################
+Natural Language Query
+----------------------
+List all the products purchased
+
+Generated SQL
+-------------
+SELECT DISTINCT product FROM orders;
+
+Result
+------------
++-----------+
+| product   |
+|-----------|
+| Laptop    |
+| Phone     |
+| Mouse     |
++-----------+
+
+Explanation
+------------
+The query retrieved a list of all unique product names found in the 'orders' table, which are Laptop, Phone, and Mouse.
+
+Cache Hit: False
+Golden Expectation: Laptop
+
+
+
+################################################################################
+CASE 3
+################################################################################
+Natural Language Query
+----------------------
+Show orders with amount greater than 100
+
+Generated SQL
+-------------
+SELECT id, customer_id, product, amount, order_date FROM orders WHERE amount > 100;
+
+Result
+------------
++------+---------------+-----------+----------+--------------+
+|   id |   customer_id | product   |   amount | order_date   |
+|------+---------------+-----------+----------+--------------|
+|    1 |             1 | Laptop    |     1200 | 2024-02-20   |
+|    2 |             2 | Phone     |      800 | 2024-02-22   |
++------+---------------+-----------+----------+--------------+
+
+Explanation
+------------
+The query successfully retrieved all orders from the `orders` table where the `amount` was greater than 100. This resulted in a table displaying the `id`, `customer_id`, `product`, `amount`, and `order_date` for the two orders that met this criterion.
+
+Cache Hit: False
+Golden Expectation: Laptop
+
+
+
+################################################################################
+CASE 4
+################################################################################
+Natural Language Query
+----------------------
+Get all customer names in alphabetical order
+
+Generated SQL
+-------------
+SELECT name FROM customers ORDER BY name ASC;
+
+Result
+------------
++---------+
+| name    |
+|---------|
+| Alice   |
+| Bob     |
+| Charlie |
++---------+
+
+Explanation
+------------
+The SQL query retrieved the 'name' column from the 'customers' table and sorted the results alphabetically in ascending order, resulting in a list of customer names (Alice, Bob, Charlie) ordered alphabetically.
+
+Cache Hit: False
+Golden Expectation: Alice
+
+
+
+################################################################################
+CASE 5
+################################################################################
+Natural Language Query
+----------------------
+Show customers from New York
+
+Generated SQL
+-------------
+SELECT id, name, city, signup_date FROM customers WHERE LOWER(city) = LOWER('New York');
+
+Result
+------------
++------+---------+----------+---------------+
+|   id | name    | city     | signup_date   |
+|------+---------+----------+---------------|
+|    1 | Alice   | New York | 2023-12-01    |
+|    3 | Charlie | New York | 2024-02-15    |
++------+---------+----------+---------------+
+
+Explanation
+------------
+The query selected customers Alice and Charlie because their city is 'New York', matching the specified filter condition. The result table displays their ID, name, city, and signup date.
+
+Cache Hit: False
+Golden Expectation: Charlie
+
+
+
+################################################################################
+CASE 6
+################################################################################
+Natural Language Query
+----------------------
+Which customer purchased 'Phone'?
+
+Generated SQL
+-------------
+SELECT T1.name FROM customers AS T1 JOIN orders AS T2 ON T1.id = T2.customer_id WHERE LOWER(T2.product) = LOWER('Phone');
+
+Result
+------------
++--------+
+| name   |
+|--------|
+| Bob    |
++--------+
+
+Explanation
+------------
+The query joins the `customers` and `orders` tables to find customers who have placed orders for "Phone" (case-insensitive). The result shows that Bob is the only customer who purchased a 'Phone'.
+
+Cache Hit: False
+Golden Expectation: Bob
+
+
+
+################################################################################
+CASE 7
+################################################################################
+Natural Language Query
+----------------------
+Show orders along with customer city
+
+Generated SQL
+-------------
+SELECT T1.product, T1.amount, T1.order_date, T2.city FROM orders AS T1 JOIN customers AS T2 ON T1.customer_id = T2.id;
+
+Result
+------------
++-----------+----------+--------------+---------------+
+| product   |   amount | order_date   | city          |
+|-----------+----------+--------------+---------------|
+| Laptop    |     1200 | 2024-02-20   | New York      |
+| Phone     |      800 | 2024-02-22   | San Francisco |
+| Mouse     |       25 | 2024-02-25   | New York      |
++-----------+----------+--------------+---------------+
+
+Explanation
+------------
+The SQL query joins the `orders` and `customers` tables on `customer_id` and `id` respectively, displaying the product, amount, and order date from the `orders` table along with the city from the `customers` table. The result shows each order's product, amount, and date, and the city where the customer who placed the order is located.
+
+Cache Hit: False
+Golden Expectation: San Francisco
+
+
+
+################################################################################
+CASE 8
+################################################################################
+Natural Language Query
+----------------------
+What is the total number of customers?
+
+Generated SQL
+-------------
+SELECT count(*) FROM customers;
+
+Result
+------------
++------------+
+|   count(*) |
+|------------|
+|          3 |
++------------+
+
+Explanation
+------------
+The SQL query `SELECT count(*) FROM customers;` counts all rows in the `customers` table. The result shows that there are 3 customers in the table.
+
+Cache Hit: False
+Golden Expectation: 3
+
+
+
+################################################################################
+CASE 9
+################################################################################
+Natural Language Query
+----------------------
+How many orders were placed in January 2024?
+
+Generated SQL
+-------------
+SELECT count(*) FROM orders WHERE order_date BETWEEN '2024-01-01' AND '2024-01-31';
+
+Result
+------------
++------------+
+|   count(*) |
+|------------|
+|          0 |
++------------+
+
+Explanation
+------------
+The query counted all orders with an order date between January 1st and January 31st, 2024, and the result shows that no orders were placed during that period.
+
+Cache Hit: False
+Golden Expectation: 0
+
+
+
+################################################################################
+CASE 10
+################################################################################
+Natural Language Query
+----------------------
+List customers whose name starts with 'A'
+
+Generated SQL
+-------------
+
+
+Result
+------------
+❌ Request failed: Expecting value: line 1 column 1 (char 0)
+
+Explanation
+------------
+
+
+Cache Hit: False
+Golden Expectation: Alice
+
+
+
+################################################################################
+CASE 11
+################################################################################
+Natural Language Query
+----------------------
+Show me the email addresses of customers
+
+Generated SQL
+-------------
+
+
+Result
+------------
+❌ Request failed: Expecting value: line 1 column 1 (char 0)
+
+Explanation
+------------
+
+
+Cache Hit: False
+Golden Expectation: ❌
+
+
+
+################################################################################
+CASE 12
+################################################################################
+Natural Language Query
+----------------------
+List all suppliers
+
+Generated SQL
+-------------
+
+
+Result
+------------
+❌ Request failed: Expecting value: line 1 column 1 (char 0)
+
+Explanation
+------------
+
+
+Cache Hit: False
+Golden Expectation: ❌
+
+
+
+################################################################################
+CASE 13
+################################################################################
+Natural Language Query
+----------------------
+Get total sales per region
+
+Generated SQL
+-------------
+SELECT T2.city, sum(T1.amount) FROM orders AS T1 JOIN customers AS T2 ON T1.customer_id = T2.id GROUP BY T2.city;
+
+Result
+------------
++---------------+------------------+
+| city          |   sum(T1.amount) |
+|---------------+------------------|
+| New York      |             1225 |
+| San Francisco |              800 |
++---------------+------------------+
+
+Explanation
+------------
+The query calculates the total sales amount for each city by joining the `orders` and `customers` tables on customer ID and then summing the `amount` for each distinct city. The result shows the total sales amount for New York is 1225 and San Francisco is 800.
+
+Cache Hit: False
+Golden Expectation: ❌
+
+
+
+================================================================================
+Total Queries: 13
+Success Rate: 100.00%
+Accuracy Rate: 61.54%
+================================================================================

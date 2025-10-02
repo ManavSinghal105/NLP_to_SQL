@@ -6,7 +6,7 @@ def get_connection(db_name="demo1.db"):
     """Return SQLite connection, auto-seed if db missing."""
     if not Path(db_name).exists():
         subprocess.run([sys.executable, "seed_db.py"], check=True)
-    return sqlite3.connect(db_name)
+    return sqlite3.connect(db_name,check_same_thread=False)
 
 def extract_schema(db_name="demo1.db"):
     """Extract schema info for all tables in db."""
