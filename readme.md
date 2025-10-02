@@ -105,3 +105,7 @@
 | `README.md`         | Project documentation 🚀 |
 
 ---
+## 🎥 Demo
+
+![NL to SQL Demo](nl_to_sql_demo.gif)
+
