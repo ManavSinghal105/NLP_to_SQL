@@ -107,5 +107,5 @@
 ---
 ## 🎥 Demo
 
-![NL to SQL Demo](nl_to_sql_demo.gif)
+![NL to SQL Demo](NL_to_SQL_demo.gif)
 
