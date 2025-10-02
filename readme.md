@@ -83,22 +83,25 @@
 
 ---
 
+
 ## 📂 Project Structure
-NL_to_SQL/
-├── test1.py / api.py # FastAPI backend (entrypoint)
-├── streamlit_app.py # Streamlit UI
-├── cache_manager.py # Semantic cache (FAISS)
-├── context_manager.py # Conversation context
-├── db.py # DB utils + schema extractor
-├── query_engine.py # Gemini NL→SQL generator
-├── retriever.py # Schema retriever
-├── validator.py # SQL validation & repair
-├── explainer.py # Plain-English explanation
-├── logger.py # Logging
-├── demo1.db # Sample DB
-├── seed_db.py # Seed script
-├── run_batch.py # Batch evaluation
-├── requirements.txt # Dependencies
-└── README.md # You are here 🚀
+
+| File / Folder       | Description |
+|---------------------|-------------|
+| `test1.py / api.py` | FastAPI backend (entrypoint) |
+| `streamlit_app.py`  | Streamlit UI |
+| `cache_manager.py`  | Semantic cache (FAISS) |
+| `context_manager.py`| Conversation context |
+| `db.py`             | DB utils + schema extractor |
+| `query_engine.py`   | Gemini NL→SQL generator |
+| `retriever.py`      | Schema retriever |
+| `validator.py`      | SQL validation & repair |
+| `explainer.py`      | Plain-English explanation |
+| `logger.py`         | Query logging |
+| `demo1.db`          | Sample DB |
+| `seed_db.py`        | Seed script |
+| `run_batch.py`      | Batch evaluation |
+| `requirements.txt`  | Dependencies |
+| `README.md`         | Project documentation 🚀 |
 
 ---
